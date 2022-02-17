@@ -4,7 +4,8 @@
 
 {% block body %}
     <h1>Event index</h1>
-
+    {{ app.request.setLocale('fr') }}
+    {{ app.request.getLocale() }}
     <table class="table">
         <thead>
             <tr>

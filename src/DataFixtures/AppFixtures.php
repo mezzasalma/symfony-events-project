@@ -8,15 +8,18 @@ use App\Repository\RoleRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class AppFixtures extends Fixture
 {
   protected $manager;
   protected $roleRepository;
+  protected $faker;
 
   public function __construct(EntityManagerInterface $manager, RoleRepository $roleRepository) {
     $this->manager = $manager;
     $this->roleRepository = $roleRepository;
+    $this->faker = Factory::create();
   }
 
   public function load(ObjectManager $manager): void
@@ -48,6 +51,17 @@ class AppFixtures extends Fixture
     $admin->setEmail('maeva.mezza38@gmail.com');
     $admin->setPhone('0600000000');
     $this->manager->persist($admin);
+
+    for($u = 0; $u < 20; $u++) {
+      $user = new User();
+      $user->setRole($this->roleRepository->findOneBy(array('type' => 'member')));
+      $user->setFirstname($this->faker->firstName());
+      $user->setLastname($this->faker->lastName());
+      $user->setBirthdate($this->faker->dateTime);
+      $user->setEmail($this->faker->email);
+      $user->setPhone($this->faker->mobileNumber());
+      $this->manager->persist($user);
+    }
     $this->manager->flush();
   }
 
