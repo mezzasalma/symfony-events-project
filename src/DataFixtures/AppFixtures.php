@@ -44,22 +44,24 @@ class AppFixtures extends Fixture
   public function create_users(): void
   {
     $admin = new User();
-    $admin->setRole($this->roleRepository->findOneBy(array('type' => 'admin')));
+    $admin->setRoles([$this->roleRepository->findOneBy(array('type' => 'admin'))]);
     $admin->setFirstname('Maëva');
     $admin->setLastname('Mezzasalma');
-    $admin->setBirthdate(new \DateTime('1999-05-19'));
+    $admin->setBirthdate($this->faker->dateTime);
     $admin->setEmail('maeva.mezza38@gmail.com');
-    $admin->setPhone('0600000000');
+    $admin->setPhone($this->faker->phoneNumber());
+    $admin->setPassword("password");
     $this->manager->persist($admin);
 
     for($u = 0; $u < 20; $u++) {
       $user = new User();
-      $user->setRole($this->roleRepository->findOneBy(array('type' => 'member')));
+      $user->setRoles([$this->roleRepository->findOneBy(array('type' => 'member'))]);
       $user->setFirstname($this->faker->firstName());
       $user->setLastname($this->faker->lastName());
       $user->setBirthdate($this->faker->dateTime);
       $user->setEmail($this->faker->email);
-      $user->setPhone($this->faker->mobileNumber());
+      $user->setPhone($this->faker->phoneNumber());
+      $user->setPassword($this->faker->password());
       $this->manager->persist($user);
     }
     $this->manager->flush();
