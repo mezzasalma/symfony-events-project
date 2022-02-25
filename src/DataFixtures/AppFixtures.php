@@ -19,12 +19,14 @@ class AppFixtures extends Fixture
   protected $manager;
   protected $roleRepository;
   protected $faker;
+  protected $passwordHasher;
 
-  public function __construct(EntityManagerInterface $manager, RoleRepository $roleRepository)
+  public function __construct(EntityManagerInterface $manager, RoleRepository $roleRepository, UserPasswordHasherInterface $passwordHasher)
   {
     $this->manager = $manager;
     $this->roleRepository = $roleRepository;
     $this->faker = Factory::create('fr_FR');
+    $this->passwordHasher = $passwordHasher;
   }
 
   public function load(ObjectManager $manager): void
@@ -46,7 +48,7 @@ class AppFixtures extends Fixture
     }
   }
 
-  public function create_users(UserPasswordHasherInterface $passwordHasher): void
+  public function create_users(): void
   {
     $admin = new User();
     $admin->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
@@ -57,7 +59,7 @@ class AppFixtures extends Fixture
     $admin->setPhone($this->faker->mobileNumber());
     $admin->setPassword("password");
     // hash the password (based on the security.yaml config for the $user class)
-    $hashedPassword = $passwordHasher->hashPassword(
+    $hashedPassword = $this->passwordHasher->hashPassword(
       $admin,
       'password'
     );
@@ -83,7 +85,8 @@ class AppFixtures extends Fixture
     for ($u = 0; $u < 10; $u++) {
       $event = new Event();
       $event->setName('New Year Eve');
-      $event->setDate(new DateTime("31-12-2022 23:00:00"));
+      $event->setStartDate($this->faker->dateTimeThisDecade('+2 years'));
+      $event->setEndDate($this->faker->dateTimeBetween($event->getStartDate(), '+8 years'));
       $event->setCity($this->faker->city());
       $event->setPostalCode($this->faker->postcode());
       $event->setPrice(13.99);

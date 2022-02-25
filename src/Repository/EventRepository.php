@@ -30,6 +30,21 @@ class EventRepository extends ServiceEntityRepository
       ->getResult();
   }
 
+  /**
+   * @return Event[] Returns an array of Event objects
+   */
+  public function findNextEvents()
+  {
+    return $this->createQueryBuilder('e')
+      ->andWhere('e.active = true')
+      ->andWhere('e.start_date > :today')
+      ->setParameter('today', new \DateTime())
+      ->orderBy('e.start_date', 'ASC')
+      ->setMaxResults(6)
+      ->getQuery()
+      ->getResult();
+  }
+
   // /**
   //  * @return Event[] Returns an array of Event objects
   //  */

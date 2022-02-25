@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Events{% endblock %}
+
+{% block body %}
+  {{ dump() }}
+  <div class="flex flex-col w-full h-full gap-10">
+    <div class="aspect-video py-10">
+      <h1 class="text-center text-2xl">Bienvenue sur Events</h1>
+    </div>
+    <section class="grid grid-cols-3 gap-4">
+      <h2 class="col-span-3 font-bold uppercase">Prochainement</h2>
+      {% for next in next_events %}
+        {% include "partials/card.html.twig" with {'event' : next} %}
+      {% endfor %}
+    </section>
+  </div>
+{% endblock %}

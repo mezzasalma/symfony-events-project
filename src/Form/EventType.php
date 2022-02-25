@@ -18,7 +18,8 @@ class EventType extends AbstractType
   {
     $builder
       ->add('name', TextType::class)
-      ->add('date', DateTimeType::class)
+      ->add('start_date', DateTimeType::class)
+      ->add('end_date', DateTimeType::class)
       ->add('location', TextType::class, ['required' => false])
       ->add('city', TextType::class)
       ->add('postal_code', TextType::class)

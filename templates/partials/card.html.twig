@@ -1,0 +1,11 @@
+<article class="col-span-1 border border-gray-500 rounded-xl p-4">
+  <a class="flex flex-col" href="{{ path('event_show', {'id': event.id}) }}">
+    <h3>{{ event.name }}</h3>
+    <span>{{ event.startDate|date('d-m-Y H:i') }}</span>
+    <span>{{ event.endDate|date('d-m-Y H:i') }}</span>
+    <span>{{ event.price }}</span>
+    {% if is_granted('ROLE_USER') %}
+      <button class="border border-gray-500 rounded-xl px-2 block ml-auto">Participer</button>
+    {% endif %}
+  </a>
+</article>

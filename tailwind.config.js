@@ -1,10 +1,16 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
 module.exports = {
-  mode: 'jit',
+  //content: [
+  //  "./src/**/*.php",
+  //  "./templates/**/*.twig",
+  //  "./styles/**/*.css"
+  //],
   content: [
-    "./src/**/*.php",
-    "./templates/**/*.twig",
-    "./styles/**/*.css"
+    "./assets/**/*.{vue,js,ts,jsx,tsx}",
+    "./templates/**/*.{html,twig}",
+    // "./src/**/*.{php}",
   ],
+  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
   },

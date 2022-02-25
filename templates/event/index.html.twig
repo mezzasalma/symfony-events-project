@@ -1,51 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event index{% endblock %}
+{% block title %}Tous les events{% endblock %}
 
 {% block body %}
-  <h1>Event index</h1>
-  <table class="table">
-    <thead>
-    <tr>
-      <th>Id</th>
-      <th>Name</th>
-      <th>Date</th>
-      <th>Location</th>
-      <th>City</th>
-      <th>Postal code</th>
-      <th>Price</th>
-      <th>Number of places</th>
-      <th>Active</th>
-      <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for event in events %}
-      <tr>
-        <td>{{ event.id }}</td>
-        <td>{{ event.name }}</td>
-        <td>{{ event.date ? event.date|date('Y-m-d H:i:s') : '' }}</td>
-        <td>{{ event.location }}</td>
-        <td>{{ event.city }}</td>
-        <td>{{ event.postalCode }}</td>
-        <td>{{ event.price }}</td>
-        <td>{{ event.numberPlaces }}</td>
-        <td>{{ event.active ? 'Yes' : 'No' }}</td>
-        <td>
-          <a href="{{ path('event_show', {'id': event.id}) }}">show</a>
-          {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('event_edit', {'id': event.id}) }}">edit</a>
-          {% endif %}
-        </td>
-      </tr>
-    {% else %}
-      <tr>
-        <td colspan="9">no records found</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  {% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('event_new') }}">Create new</a>
-  {% endif %}
+<section>
+  <h1></h1>
+  {% endfor %}
+</section>
+<section class="grid grid-cols-3 gap-4">
+  <h2 class="col-span-3 font-bold uppercase">Tous les évènements</h2>
+  {% for event in events %}
+    {% include "partials/card.html.twig" with {'event' : event} %}
+  {% else %}
+    <p>Il n'y a pas d'évènement programmé pour le moment</p>
+  {% endfor %}
+</section>
+{% if is_granted('ROLE_ADMIN') %}
+  <a href="{{ path('event_new') }}">Create new</a>
+{% endif %}
 {% endblock %}

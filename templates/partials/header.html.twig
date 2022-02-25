@@ -1,0 +1,27 @@
+<header class="flex justify-between bg-gray-200 p-4">
+  <nav class="flex gap-10">
+    <span class="pl-4 font-bold uppercase">Events</span>
+    <ul class="flex gap-6">
+      <li>
+        <a href="/">Home</a>
+      </li>
+      <li>
+        <a href="/event">Events</a>
+      </li>
+      {% if is_granted('ROLE_ADMIN') %}
+        <li>
+          <a href="/user">Members</a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  <div class="flex gap-2">
+    {% if not is_granted('ROLE_USER') %}
+      <a class="inline-block border border-gray-500 rounded-xl px-4" href="/register">S'inscrire</a>
+      <a class="inline-block border border-gray-500 rounded-xl px-4" href="/login">Se connecter</a>
+    {% endif %}
+    {% if is_granted('ROLE_USER') %}
+      <a class="inline-block border border-gray-500 rounded-xl px-4" href="/logout">Se déconnecter</a>
+    {% endif %}
+  </div>
+</header>

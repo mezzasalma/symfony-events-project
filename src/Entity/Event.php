@@ -28,7 +28,12 @@ class Event
   /**
    * @ORM\Column(type="datetime")
    */
-  private $date;
+  private $start_date;
+
+  /**
+   * @ORM\Column(type="datetime")
+   */
+  private $end_date;
 
   /**
    * @ORM\Column(type="string", length=255, nullable=true)
@@ -89,14 +94,26 @@ class Event
     return $this;
   }
 
-  public function getDate(): ?\DateTimeInterface
+  public function getStartDate(): ?\DateTimeInterface
   {
-    return $this->date;
+    return $this->start_date;
   }
 
-  public function setDate(\DateTimeInterface $date): self
+  public function setStartDate(\DateTimeInterface $start_date): self
   {
-    $this->date = $date;
+    $this->start_date = $start_date;
+
+    return $this;
+  }
+
+  public function getEndDate(): ?\DateTimeInterface
+  {
+    return $this->end_date;
+  }
+
+  public function setEndDate(\DateTimeInterface $end_date): self
+  {
+    $this->end_date = $end_date;
 
     return $this;
   }
@@ -199,5 +216,4 @@ class Event
 
       return $this;
   }
-
 }

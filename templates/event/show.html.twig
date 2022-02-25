@@ -17,7 +17,11 @@
     </tr>
     <tr>
       <th>Date</th>
-      <td>{{ event.date ? event.date|date('Y-m-d H:i:s') : '' }}</td>
+      <td>{{ event.start_date ? event.start_date|date('Y-m-d H:i:s') : '' }}</td>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <td>{{ event.end_date ? event.end_date|date('Y-m-d H:i:s') : '' }}</td>
     </tr>
     <tr>
       <th>Location</th>
