@@ -22,10 +22,11 @@ class EventRepository extends ServiceEntityRepository
   /**
    * @return Event[] Returns an array of Event objects
    */
-  public function findAllActive()
+  public function findAllNextEvents()
   {
     return $this->createQueryBuilder('e')
-      ->andWhere('e.active = true')
+      ->andWhere('e.start_date >= :today')
+      ->setParameter('today', new \DateTime())
       ->getQuery()
       ->getResult();
   }
@@ -33,14 +34,29 @@ class EventRepository extends ServiceEntityRepository
   /**
    * @return Event[] Returns an array of Event objects
    */
-  public function findNextEvents()
+  public function findNextEventsActive(int $nbr = -1)
   {
     return $this->createQueryBuilder('e')
       ->andWhere('e.active = true')
-      ->andWhere('e.start_date > :today')
+      ->andWhere('e.start_date >= :today')
       ->setParameter('today', new \DateTime())
       ->orderBy('e.start_date', 'ASC')
-      ->setMaxResults(6)
+      ->setMaxResults($nbr)
+      ->getQuery()
+      ->getResult();
+  }
+
+  /**
+   * @return Event[] Returns an array of Event objects
+   */
+  public function findPastEventsActive()
+  {
+    return $this->createQueryBuilder('e')
+      ->andWhere('e.active = true')
+      ->andWhere('e.start_date < :today')
+      ->setParameter('today', new \DateTime())
+      ->orderBy('e.start_date', 'DESC')
+      ->setMaxResults(-1)
       ->getQuery()
       ->getResult();
   }

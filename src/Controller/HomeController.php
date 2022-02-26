@@ -13,8 +13,11 @@ class HomeController extends AbstractController {
    */
   public function index(EventRepository $eventRepository): Response
   {
+    /** @var \App\Entity\User $user */
+    $user = $this->getUser();
     return $this->render('index.html.twig', [
-      'next_events' => $eventRepository->findNextEvents(),
+      'user' => $user,
+      'next_events' => $eventRepository->findNextEventsActive(6),
     ]);
   }
 }

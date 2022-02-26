@@ -6,12 +6,12 @@ use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\Event;
 use App\Repository\RoleRepository;
+use DateInterval;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Provider\fr_FR\PhoneNumber;
-use \Datetime;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
@@ -82,11 +82,13 @@ class AppFixtures extends Fixture
 
   public function create_events(): void
   {
-    for ($u = 0; $u < 10; $u++) {
+    for ($u = 0; $u < 1; $u++) {
       $event = new Event();
-      $event->setName('New Year Eve');
-      $event->setStartDate($this->faker->dateTimeThisDecade('+2 years'));
-      $event->setEndDate($this->faker->dateTimeBetween($event->getStartDate(), '+8 years'));
+      $event->setName($this->faker->word());
+      $event->setStartDate($this->faker->dateTimeBetween('-2 years', '+5 years'));
+      //$event->setEndDate(date_add($event->getStartDate(), date_interval_create_from_date_string('5 hours')));
+      // var_dump() montre bien une différence mais en bdd same as start_date
+      $event->setEndDate($event->getStartDate()->add(new DateInterval('P3D')));
       $event->setCity($this->faker->city());
       $event->setPostalCode($this->faker->postcode());
       $event->setPrice(13.99);

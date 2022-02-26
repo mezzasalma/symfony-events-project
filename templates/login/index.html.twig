@@ -3,21 +3,26 @@
 {% block title %}Hello LoginController!{% endblock %}
 
 {% block body %}
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+  {% if error %}
+    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+  {% endif %}
+  <h1>Connexion</h1>
+  <form action="{{ path('login') }}" method="post">
+    <div>
+      <label for="username">Email:</label>
+      <input type="text" id="username" name="_username" value="{{ last_username }}"/>
+    </div>
+    <div>
+      <label for="password">Mot de passe:</label>
+      <input type="password" id="password" name="_password"/>
+    </div>
 
-    <form action="{{ path('login') }}" method="post">
-        <label for="username">Email:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}"/>
-
-        <label for="password">Mot de passe:</label>
-        <input type="password" id="password" name="_password"/>
-
-        {# If you want to control the URL the user is redirected to on success
+    {# If you want to control the URL the user is redirected to on success
         <input type="hidden" name="_target_path" value="/account"/> #}
-
-        <button type="submit">Se connecter</button>
-        <button type="button"><a href="/register">S'inscrire</a></button>
-    </form>
+    <div class="flex gap-4">
+      <button type="submit">Se connecter</button>
+      <button type="button"><a href="/reset-password">Mot de passe oublié</a></button>
+      <button type="button"><a href="/register">S'inscrire</a></button>
+    </div>
+  </form>
 {% endblock %}

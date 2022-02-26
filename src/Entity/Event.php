@@ -72,6 +72,11 @@ class Event
    */
   private $users;
 
+  /**
+   * @ORM\Column(type="text", nullable=true)
+   */
+  private $description;
+
   public function __construct()
   {
       $this->users = new ArrayCollection();
@@ -213,6 +218,18 @@ class Event
       if ($this->users->removeElement($user)) {
           $user->removeEvent($this);
       }
+
+      return $this;
+  }
+
+  public function getDescription(): ?string
+  {
+      return $this->description;
+  }
+
+  public function setDescription(?string $description): self
+  {
+      $this->description = $description;
 
       return $this;
   }

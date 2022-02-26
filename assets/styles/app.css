@@ -3,4 +3,23 @@
 @tailwind utilities;
 
 body {
+
+}
+h1 {
+    @apply uppercase font-bold text-xl my-4 text-center;
+}
+h2 {
+    @apply uppercase font-bold;
+}
+
+form {
+    @apply flex flex-col gap-4 my-4;
+}
+
+input {
+    @apply bg-gray-100 rounded-md mx-4 px-2;
+}
+
+a.button, button {
+    @apply border border-gray-500 rounded-xl px-2 block mx-auto;
 }
