@@ -25,7 +25,7 @@ class MailerController extends AbstractController
   {
     $email = (new Email())
       ->from('hello@events.com')
-      ->to(new Address($user . email, $user . firstname))
+      ->to(new Address($user->getEmail(), $user->getFirstname()))
       ->subject("Vous participez à l'évènement !")
       ->getHeaders()
       // this header tells auto-repliers ("email holiday mode") to not
@@ -45,14 +45,14 @@ class MailerController extends AbstractController
 
   public function sendEmailToAll(Event $event, array $users)
   {
-    for ($u = 0; $u < count($users); $u++) {
+    for ($i = 0; $i < count($users); $i++) {
       $email = (new Email())
         ->from('hello@events.com')
-        ->to(new Address($users[$u] . email, $users[$u] . firstname))
+        ->to(new Address($users[$i]->getEmail(), $users[$i]->getFirstname()))
         ->subject('New Event online : :event')
         ->getHeaders()
         ->addTextHeader('X-Auto-Response-Suppress', 'OOF, DR, RN, NRN, AutoReply')
-        ->setParameters('event', $event . name);
+        ->setParameters('event', $event->getName());
       try {
         $this->mailer->send($email);
       } catch (TransportExceptionInterface $e) {

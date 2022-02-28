@@ -96,7 +96,7 @@ class AppFixtures extends Fixture
       $event->setCity($this->faker->city());
       $event->setPostalCode($this->faker->postcode());
       $event->setPrice(13.99);
-      $event->setNumberPlaces(500);
+      $event->setSeats(3);
       $event->setActive(true);
       $this->manager->persist($event);
       $this->manager->flush();

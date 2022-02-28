@@ -128,8 +128,30 @@ class EventController extends AbstractController
   {
 
     if ($this->isCsrfTokenValid('put' . $event->getId(), $request->request->get('_token'))) {
-      if ($this->getUser()) {
+      if ($this->getUser() && count($event->getUsers()) < $event->getSeats()) {
         $event->addUser($this->getUser());
+        $this->entityManager->persist($event);
+        $this->entityManager->flush();
+      }
+    }
+
+    return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
+  }
+
+  /**
+   * @Route("/{id}/remove_participant", name="event_remove_participant", methods={"POST"})
+   * @IsGranted("ROLE_USER")
+   */
+  public function removeParticipant(Request $request, Event $event, EventRepository $eventRepository): Response
+  {
+    if ($this->isCsrfTokenValid('put' . $event->getId(), $request->request->get('_token'))) {
+      if ($this->getUser()) {
+        $users = $event->getUsers();
+        for ($i = 0; $i < count($users); $i++) {
+          if($users[$i] == $this->getUser()) {
+            $event->removeUser($users[$i]);
+          }
+        }
         $this->entityManager->persist($event);
         $this->entityManager->flush();
       }

@@ -57,12 +57,6 @@ class Event
   private $price;
 
   /**
-   * @ORM\Column(type="integer")
-   * @Assert\GreaterThanOrEqual(0)
-   */
-  private $number_places;
-
-  /**
    * @ORM\Column(type="boolean", options={"default"=false})
    */
   private $active;
@@ -76,6 +70,11 @@ class Event
    * @ORM\Column(type="text", nullable=true)
    */
   private $description;
+
+  /**
+   * @ORM\Column(type="integer")
+   */
+  private $seats;
 
   public function __construct()
   {
@@ -171,18 +170,6 @@ class Event
     return $this;
   }
 
-  public function getNumberPlaces(): ?int
-  {
-    return $this->number_places;
-  }
-
-  public function setNumberPlaces(int $number_places): self
-  {
-    $this->number_places = $number_places;
-
-    return $this;
-  }
-
   public function getActive(): ?bool
   {
     return $this->active;
@@ -230,6 +217,18 @@ class Event
   public function setDescription(?string $description): self
   {
       $this->description = $description;
+
+      return $this;
+  }
+
+  public function getSeats(): ?int
+  {
+      return $this->seats;
+  }
+
+  public function setSeats(int $seats): self
+  {
+      $this->seats = $seats;
 
       return $this;
   }

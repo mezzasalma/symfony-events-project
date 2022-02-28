@@ -4,17 +4,26 @@
 
 {% block body %}
   <div class="grid grid-cols-3">
-    <div class="col-span-3">
-      <a class="flex justify-center items-center button ml-0" href="{{ path('event_index') }}">back to list</a>
-      <h1>{{ event.name }}</h1>
+    <div class="flex items-center col-span-1">
+      <a class="flex gap-3 items-center button"
+         href="{{ path('event_index') }}">
+        <span class="w-5 h-5">{{ source('@assets_path'~asset('svg/back.svg')) }}</span>
+        back to list
+      </a>
     </div>
+    <div class="">
+      <h1 class="flex-1">{{ event.name }}</h1>
+    </div>
+    <div class="flex items-center justify-center">
+      {% if is_granted('ROLE_ADMIN') %}
+        <a class="button" href="{{ path('event_edit', {'id': event.id}) }}">edit</a>
+        {{ include('event/_delete_form.html.twig') }}
+      {% endif %}
+    </div>
+    <p class="col-span-3">{{ event.description }}</p>
   </div>
   <table class="table">
     <tbody>
-    <tr>
-      <th>Description</th>
-      <td>{{ event.description }}</td>
-    </tr>
     <tr>
       <th>Date</th>
       <td>{{ event.startDate ? event.startDate|date('Y-m-d H:i:s') : '' }}</td>
@@ -42,7 +51,7 @@
     {% if is_granted('ROLE_ADMIN') %}
       <tr>
         <th>Number of places</th>
-        <td>{{ event.numberPlaces }}</td>
+        <td>{{ event.seats }}</td>
       </tr>
       <tr>
         <th>Active</th>
@@ -51,14 +60,6 @@
     {% endif %}
     </tbody>
   </table>
+  {% include "/event/_add_participant_form.html.twig" %}
 
-  {{ dump(event) }}
-
-  {% if is_granted('ROLE_USER') %}
-    <button type="button">Participer</button>
-  {% endif %}
-  {% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('event_edit', {'id': event.id}) }}">edit</a>
-    {{ include('event/_delete_form.html.twig') }}
-  {% endif %}
 {% endblock %}

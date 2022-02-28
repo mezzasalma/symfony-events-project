@@ -1,3 +1,11 @@
+{# set isParticipate = event.users|filter(u => u.id == app.user.id) #}
+{% set participate = false %}
+{% for user in event.users %}
+  {% if app.user is not null and user.id == app.user.id %}
+    {% set participate = true %}
+  {% endif %}
+{% endfor %}
+
 <article class="col-span-1 border border-gray-500 rounded-xl p-4">
   <a class="flex flex-col" href="{{ path('event_show', {'id': event.id}) }}">
     <h3>{{ event.name }}</h3>
@@ -5,10 +13,13 @@
     <span>{{ event.startDate|date('d-m-Y H:i') }}</span>
     <span>{{ event.endDate|date('d-m-Y H:i') }}</span>
     <span>{{ event.price }}</span>
-    {{ dump(event.users) }}
-    {% if is_granted('ROLE_USER') %}
-      {# <a href="{{ path('event_add_participant', {'event': event.id }) }}" class="border border-gray-500 rounded-xl px-2 block !mr-0">Participer</a> #}
+
+    {% if is_granted('ROLE_USER') and participate == false and event.users|length < event.seats %}
       {% include "/event/_add_participant_form.html.twig" %}
+    {% elseif is_granted('ROLE_USER') and participate %}
+      {% include "/event/_remove_participant_form.html.twig" %}
+    {% elseif event.users|length >= event.seats %}
+      <span>Complet</span>
     {% endif %}
   </a>
 </article>

@@ -25,7 +25,7 @@ class EventType extends AbstractType
       ->add('city', TextType::class)
       ->add('postal_code', TextType::class)
       ->add('price', MoneyType::class)
-      ->add('number_places', IntegerType::class)
+      ->add('seats', IntegerType::class)
       ->add('description', TextareaType::class)
       ->add('active', CheckboxType::class, ['required' => false]);
   }
