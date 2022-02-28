@@ -82,20 +82,24 @@ class AppFixtures extends Fixture
 
   public function create_events(): void
   {
-    for ($u = 0; $u < 1; $u++) {
+    for ($u = 0; $u < 20; $u++) {
       $event = new Event();
+      var_dump($event);
       $event->setName($this->faker->word());
       $event->setStartDate($this->faker->dateTimeBetween('-2 years', '+5 years'));
-      //$event->setEndDate(date_add($event->getStartDate(), date_interval_create_from_date_string('5 hours')));
-      // var_dump() montre bien une différence mais en bdd same as start_date
-      $event->setEndDate($event->getStartDate()->add(new DateInterval('P3D')));
+      // $event->setEndDate(date_add($event->getStartDate(), date_interval_create_from_date_string('5 hours')));
+      var_dump($event->getStartDate());
+      var_dump($event->getStartDate()->add(new DateInterval('P03D')));
+      $startDate = $event->getStartDate();
+      $endDate = $startDate->add(new DateInterval('P03D'));
+      $event->setEndDate($endDate);
       $event->setCity($this->faker->city());
       $event->setPostalCode($this->faker->postcode());
       $event->setPrice(13.99);
       $event->setNumberPlaces(500);
       $event->setActive(true);
       $this->manager->persist($event);
+      $this->manager->flush();
     }
-    $this->manager->flush();
   }
 }

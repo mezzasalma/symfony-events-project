@@ -52,6 +52,8 @@
     </tbody>
   </table>
 
+  {{ dump(event) }}
+
   {% if is_granted('ROLE_USER') %}
     <button type="button">Participer</button>
   {% endif %}

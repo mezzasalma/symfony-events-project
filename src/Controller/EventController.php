@@ -27,7 +27,7 @@ class EventController extends AbstractController
   {
     $this->entityManager = $entityManager;
   }
-  
+
   /**
    * @Route("/", name="event_index", methods={"GET"})
    */
@@ -57,10 +57,10 @@ class EventController extends AbstractController
     if ($form->isSubmitted() && $form->isValid()) {
       $this->entityManager->persist($event);
       $this->entityManager->flush();
-      $this->sendEmail($mailer, $event, $userRepository->findAll());
+      //$this->sendEmail($mailer, $event, $userRepository->findAll());
       $response = $this->forward('App\Controller\MailerController::sendEmailToAll', [
-        'event'  => ,
-        'users' => 'green',
+        'event' => $event,
+        'users' => $userRepository->findAll(),
       ]);
 
       return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
@@ -120,28 +120,21 @@ class EventController extends AbstractController
     return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
   }
 
-  public function userParticipate(EventRepository $eventRepository, User $user)
+  /**
+   * @Route("/{id}/add_participant", name="event_add_participant", methods={"POST"})
+   * @IsGranted("ROLE_USER")
+   */
+  public function addParticipant(Request $request, Event $event, EventRepository $eventRepository): Response
   {
 
-  }
-
-  public function sendEmail(MailerInterface $mailer, Event $event, array $users)
-  {
-    for ($u = 0; $u < count($users); $u++) {
-      $email = (new Email())
-        ->from('hello@example.com')
-        ->to($users[$u] . email)
-        ->subject('New Event online : :event')
-        ->setParameters('event', $event . name);
-        //->text('Sending emails is fun again!')
-        //->html('<p>See Twig integration for better HTML integration!</p>');
-
-      try {
-        $mailer->send($email);
-      } catch (TransportExceptionInterface $e) {
-        // some error prevented the email sending; display an
-        // error message or try to resend the message
+    if ($this->isCsrfTokenValid('put' . $event->getId(), $request->request->get('_token'))) {
+      if ($this->getUser()) {
+        $event->addUser($this->getUser());
+        $this->entityManager->persist($event);
+        $this->entityManager->flush();
       }
     }
+
+    return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
   }
 }

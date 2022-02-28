@@ -5,8 +5,10 @@
     <span>{{ event.startDate|date('d-m-Y H:i') }}</span>
     <span>{{ event.endDate|date('d-m-Y H:i') }}</span>
     <span>{{ event.price }}</span>
+    {{ dump(event.users) }}
     {% if is_granted('ROLE_USER') %}
-      <button class="border border-gray-500 rounded-xl px-2 block !mr-0">Participer</button>
+      {# <a href="{{ path('event_add_participant', {'event': event.id }) }}" class="border border-gray-500 rounded-xl px-2 block !mr-0">Participer</a> #}
+      {% include "/event/_add_participant_form.html.twig" %}
     {% endif %}
   </a>
 </article>
