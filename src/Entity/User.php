@@ -65,9 +65,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $Events;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Collective::class, mappedBy="members")
+     */
+    private $collectives;
+
     public function __construct()
     {
         $this->Events = new ArrayCollection();
+        $this->collectives = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -227,6 +233,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeEvent(Event $event): self
     {
         $this->Events->removeElement($event);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Collective[]
+     */
+    public function getCollectives(): Collection
+    {
+        return $this->collectives;
+    }
+
+    public function addCollective(Collective $collective): self
+    {
+        if (!$this->collectives->contains($collective)) {
+            $this->collectives[] = $collective;
+            $collective->addMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCollective(Collective $collective): self
+    {
+        if ($this->collectives->removeElement($collective)) {
+            $collective->removeMember($this);
+        }
 
         return $this;
     }

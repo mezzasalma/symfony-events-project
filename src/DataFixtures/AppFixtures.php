@@ -84,7 +84,6 @@ class AppFixtures extends Fixture
   {
     for ($u = 0; $u < 20; $u++) {
       $event = new Event();
-      var_dump($event);
       $event->setName($this->faker->word());
       $event->setStartDate($this->faker->dateTimeBetween('-2 years', '+5 years'));
       // $event->setEndDate(date_add($event->getStartDate(), date_interval_create_from_date_string('5 hours')));

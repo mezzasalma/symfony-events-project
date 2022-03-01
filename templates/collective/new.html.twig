@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Collective{% endblock %}
+
+{% block body %}
+  <h1>Create new Collective</h1>
+  {{ include('collective/_form.html.twig') }}
+  {% if not is_granted('ROLE_USER') %}
+    <ul class="members"
+        data-index="{{ form.members|length > 0 ? form.members|last.vars.name + 1 : 0 }}"
+        data-prototype="{{ form_widget(form.members.vars.prototype)|e('html_attr') }}"
+    ></ul>
+    <button type="button" class="add_item_link" data-collection-holder-class="members">Add a member</button>
+  {% endif %}
+  <script>
+    document
+      .querySelectorAll('.add_item_link')
+      .forEach(btn => {
+        btn.addEventListener("click", addFormToCollection)
+      });
+
+    const addFormToCollection = (e) => {
+      const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+      const item = document.createElement('li');
+
+      item.innerHTML = collectionHolder
+        .dataset
+        .prototype
+        .replace(
+          /__name__/g,
+          collectionHolder.dataset.index
+        );
+
+      collectionHolder.appendChild(item);
+
+      collectionHolder.dataset.index++;
+    };
+  </script>
+{% endblock %}
+

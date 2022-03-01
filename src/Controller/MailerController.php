@@ -26,12 +26,12 @@ class MailerController extends AbstractController
     $email = (new Email())
       ->from('hello@events.com')
       ->to(new Address($user->getEmail(), $user->getFirstname()))
-      ->subject("Vous participez à l'évènement !")
+      ->subject($data['subject'])
       ->getHeaders()
       // this header tells auto-repliers ("email holiday mode") to not
       // reply to this message because it's an automated email
       ->addTextHeader('X-Auto-Response-Suppress', 'OOF, DR, RN, NRN, AutoReply')
-      ->text($data);
+      ->text($data['text']);
     // path of the Twig template to render new TemplatedEmail()
     //->htmlTemplate('emails/newsletter.html.twig');
 
@@ -43,16 +43,16 @@ class MailerController extends AbstractController
     }
   }
 
-  public function sendEmailToAll(Event $event, array $users)
+  public function sendEmailToAll(Event $event, array $users, $data)
   {
     for ($i = 0; $i < count($users); $i++) {
       $email = (new Email())
         ->from('hello@events.com')
         ->to(new Address($users[$i]->getEmail(), $users[$i]->getFirstname()))
-        ->subject('New Event online : :event')
+        ->subject($data['subject'])
         ->getHeaders()
         ->addTextHeader('X-Auto-Response-Suppress', 'OOF, DR, RN, NRN, AutoReply')
-        ->setParameters('event', $event->getName());
+        ->text($data['text']);
       try {
         $this->mailer->send($email);
       } catch (TransportExceptionInterface $e) {

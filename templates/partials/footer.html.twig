@@ -1,0 +1,15 @@
+{# mb-10 only because of dev toolbar #}
+<footer class="flex justify-between bg-gray-200 px-10 py-2 mt-auto text-sm mb-10">
+  <div class="flex gap-2">
+    {% if not is_granted('ROLE_USER') %}
+      <a class="" href="/register">S'inscrire</a>
+      <a class="" href="/login">Se connecter</a>
+    {% endif %}
+    {% if is_granted('ROLE_USER') %}
+      <a class="" href="/logout">Se déconnecter</a>
+    {% endif %}
+  </div>
+  <div>
+    <a class="" href="/collective/new">Inscrire son collectif</a>
+  </div>
+</footer>

@@ -76,9 +76,20 @@ class Event
    */
   private $seats;
 
+  /**
+   * @ORM\ManyToMany(targetEntity=Collective::class, mappedBy="events")
+   */
+  private $collectives;
+
   public function __construct()
   {
       $this->users = new ArrayCollection();
+      $this->collectives = new ArrayCollection();
+  }
+
+  public function __toString()
+  {
+    return $this->name;
   }
 
   public function getId(): ?int
@@ -229,6 +240,33 @@ class Event
   public function setSeats(int $seats): self
   {
       $this->seats = $seats;
+
+      return $this;
+  }
+
+  /**
+   * @return Collection|Collective[]
+   */
+  public function getCollectives(): Collection
+  {
+      return $this->collectives;
+  }
+
+  public function addCollective(Collective $collective): self
+  {
+      if (!$this->collectives->contains($collective)) {
+          $this->collectives[] = $collective;
+          $collective->addEvent($this);
+      }
+
+      return $this;
+  }
+
+  public function removeCollective(Collective $collective): self
+  {
+      if ($this->collectives->removeElement($collective)) {
+          $collective->removeEvent($this);
+      }
 
       return $this;
   }

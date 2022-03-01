@@ -22,10 +22,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class EventController extends AbstractController
 {
   private $entityManager;
+  private $userRepository;
 
-  public function __construct(EntityManagerInterface $entityManager)
+  public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository)
   {
     $this->entityManager = $entityManager;
+    $this->userRepository = $userRepository;
   }
 
   /**
@@ -48,7 +50,7 @@ class EventController extends AbstractController
    * @Route("/new", name="event_new", methods={"GET", "POST"})
    * @IsGranted("ROLE_ADMIN")
    */
-  public function new(Request $request, MailerInterface $mailer, UserRepository $userRepository): Response
+  public function new(Request $request, MailerInterface $mailer): Response
   {
     $event = new Event();
     $form = $this->createForm(EventType::class, $event);
@@ -57,10 +59,14 @@ class EventController extends AbstractController
     if ($form->isSubmitted() && $form->isValid()) {
       $this->entityManager->persist($event);
       $this->entityManager->flush();
-      //$this->sendEmail($mailer, $event, $userRepository->findAll());
+
       $response = $this->forward('App\Controller\MailerController::sendEmailToAll', [
         'event' => $event,
-        'users' => $userRepository->findAll(),
+        'users' => $this->userRepository->findAll(),
+        'data' => [
+          'subject' => "Prochainement : "+ $event->getName(),
+          'text' => ''
+        ]
       ]);
 
       return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
@@ -97,6 +103,15 @@ class EventController extends AbstractController
     if ($form->isSubmitted() && $form->isValid()) {
       $this->entityManager->flush();
 
+      $response = $this->forward('App\Controller\MailerController::sendEmail', [
+        'event' => $event,
+        'users' => $this->userRepository->findAll(),
+        'data' => [
+          'subject' => "L'évènement "+ $event->getName() +" auquel vous participez a été modifié !",
+          'text' => ''
+        ]
+      ]);
+
       return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -124,9 +139,8 @@ class EventController extends AbstractController
    * @Route("/{id}/add_participant", name="event_add_participant", methods={"POST"})
    * @IsGranted("ROLE_USER")
    */
-  public function addParticipant(Request $request, Event $event, EventRepository $eventRepository): Response
+  public function addParticipant(Request $request, Event $event): Response
   {
-
     if ($this->isCsrfTokenValid('put' . $event->getId(), $request->request->get('_token'))) {
       if ($this->getUser() && count($event->getUsers()) < $event->getSeats()) {
         $event->addUser($this->getUser());
@@ -142,13 +156,13 @@ class EventController extends AbstractController
    * @Route("/{id}/remove_participant", name="event_remove_participant", methods={"POST"})
    * @IsGranted("ROLE_USER")
    */
-  public function removeParticipant(Request $request, Event $event, EventRepository $eventRepository): Response
+  public function removeParticipant(Request $request, Event $event): Response
   {
     if ($this->isCsrfTokenValid('put' . $event->getId(), $request->request->get('_token'))) {
       if ($this->getUser()) {
         $users = $event->getUsers();
         for ($i = 0; $i < count($users); $i++) {
-          if($users[$i] == $this->getUser()) {
+          if ($users[$i] == $this->getUser()) {
             $event->removeUser($users[$i]);
           }
         }
